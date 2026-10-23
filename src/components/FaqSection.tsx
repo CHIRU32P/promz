@@ -11,22 +11,22 @@ export function FaqSection() {
     {
       question: "How does video reverse-engineering work under the hood?",
       answer:
-        "The system breaks the input video into keyframes and temporal optical flow vectors using FFmpeg. A multimodal vision model detects shot cut boundaries, isolates lighting/camera setups, and identifies subjects. Simultaneously, Whisper processes the audio track into dialogue with speaker timestamps, while acoustic models catalog sound effects. The resulting structured scene graph is translated into either screenplays (Mode A) or platform-tuned generative diffusion prompts (Mode B).",
+        "PROMZ streams the input video to the Google Gemini multimodal engine and uses PyAV for container inspection. The model analyzes scene cut boundaries, isolates lighting/camera setups, and identifies subjects. Simultaneously, speech transcription parses dialogue with speaker confidence, while acoustic models catalog sound effects. The resulting scene graph is formatted into screenplay cards (Mode A) or platform-tuned generative diffusion prompts (Mode B).",
     },
     {
       question: "What output formats are supported?",
       answer:
-        "You can export in industry-standard Markdown (.md) formatted for screenplays, raw structured JSON specs for direct API or pipeline integration, or copy diffusion prompts directly to your clipboard. Support for Final Draft (.fdx) and Fountain formats is planned for the upcoming FastAPI release.",
+        "You can export in industry-standard Markdown (.md) formatted for screenplays, raw structured JSON specs for direct API or pipeline integration, or copy diffusion prompts directly to your clipboard for Runway, Sora, and Kling.",
     },
     {
       question: "Which video file formats can I analyze?",
       answer:
-        "The current frontend studio supports standard web containers including MP4 (H.264 / AV1), QuickTime MOV (ProRes / H.264), and WebM. File size limits for the cloud processing pipeline are determined by the backend infrastructure during deployment.",
+        "The studio supports standard video containers including MP4 (H.264 / AV1), QuickTime MOV (ProRes / H.264), WebM, AVI, and MKV. Video files up to 100MB are supported on the local processing engine.",
     },
     {
       question: "How accurate are scene timestamps and cuts?",
       answer:
-        "Scene cut boundaries are evaluated using optical flow and luminance histogram spikes, achieving sub-second boundary identification on hard cuts. Dissolves, whip pans, and long morphing transitions are identified as continuous sequences with approximate transition intervals rather than instantaneous hard cuts.",
+        "Scene cut boundaries are evaluated using visual optical flow and luminance histogram transitions, achieving sub-second boundary identification on hard cuts. Dissolves and whip pans are identified as continuous sequences with transition tags rather than instantaneous hard cuts.",
     },
     {
       question: "Can I use the generated recreation prompts directly in Runway or Sora?",
@@ -36,47 +36,47 @@ export function FaqSection() {
     {
       question: "How is video privacy and storage handled?",
       answer:
-        "In the current frontend demonstration, preset analysis runs locally in your browser session without uploading footage to third-party services. When connected to the future Python FastAPI backend, video processing can run either in private self-hosted GPU containers or transient cloud workers with automated temporary artifact cleanup. Specific data retention policies will be configured based on your deployment architecture.",
+        "Video files uploaded for analysis are held in temporary server memory only during the active analysis session and are immediately deleted from both the local filesystem and Google Gemini temporary file storage upon completion.",
     },
   ];
 
   return (
-    <section id="faq" className="py-24 relative border-t border-white/[0.08] scroll-mt-20">
+    <section id="faq" className="py-24 relative border-t border-stone-200/80 scroll-mt-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Heading */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.05] border border-white/10 text-xs font-mono text-[#ff7700] uppercase mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-stone-200 text-xs font-mono text-[#ff4d00] uppercase mb-4 shadow-sm font-semibold">
             <HelpCircle className="w-3.5 h-3.5" />
             ARCHITECTURE & METHODOLOGY
           </div>
-          <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white uppercase">
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight text-stone-900 uppercase">
             Frequently Asked Questions
           </h2>
-          <p className="mt-4 text-neutral-400 text-sm md:text-base max-w-xl mx-auto">
-            Clear, transparent answers about how the reverse-engineering pipeline operates.
+          <p className="mt-4 text-stone-600 text-sm md:text-base max-w-xl mx-auto font-normal">
+            Clear, transparent answers about how the PROMZ reverse-engineering pipeline operates.
           </p>
         </div>
 
-        {/* Accordion List */}
+        {/* Accordion List in Cream & White Classic Glass */}
         <div className="space-y-4">
           {faqs.map((faq, idx) => {
             const isOpen = openIndex === idx;
             return (
               <div
                 key={idx}
-                className="rounded-2xl bg-neutral-950/70 border border-white/[0.08] overflow-hidden transition-colors"
+                className="rounded-3xl bg-white/75 backdrop-blur-xl border border-white/90 shadow-[0_10px_30px_-10px_rgba(40,30,20,0.05)] overflow-hidden transition-colors"
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : idx)}
-                  className="w-full p-6 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-neutral-900/30 transition-colors"
+                  className="w-full p-6 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-stone-50/50 transition-colors"
                 >
-                  <span className="text-base sm:text-lg font-bold text-white tracking-tight">
+                  <span className="text-base sm:text-lg font-bold text-stone-900 tracking-tight">
                     {faq.question}
                   </span>
                   <div
-                    className={`w-7 h-7 rounded-full bg-neutral-900 border border-white/10 flex items-center justify-center text-neutral-400 shrink-0 transition-transform duration-300 ${
-                      isOpen ? "rotate-180 text-[#ff5500] border-[#ff5500]/40" : ""
+                    className={`w-8 h-8 rounded-full bg-stone-100 border border-stone-200 flex items-center justify-center text-stone-500 shrink-0 transition-transform duration-300 ${
+                      isOpen ? "rotate-180 text-[#ff4d00] border-[#ff4d00]/40" : ""
                     }`}
                   >
                     <ChevronDown className="w-4 h-4" />
@@ -91,7 +91,7 @@ export function FaqSection() {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.25 }}
                     >
-                      <div className="px-6 pb-6 pt-1 text-sm text-neutral-300 leading-relaxed border-t border-white/[0.04]">
+                      <div className="px-6 pb-6 pt-1 text-sm text-stone-600 leading-relaxed border-t border-stone-100">
                         {faq.answer}
                       </div>
                     </motion.div>

@@ -71,20 +71,20 @@ export function FeaturesSection() {
   ];
 
   return (
-    <section id="features" className="py-24 relative border-t border-white/[0.08] scroll-mt-20">
+    <section id="features" className="py-24 relative border-t border-stone-200/80 scroll-mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Heading */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 pb-6 border-b border-white/[0.08] gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 pb-6 border-b border-stone-200/80 gap-4">
           <div>
-            <span className="text-xs font-mono uppercase tracking-widest text-[#ff5500]">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#ff4d00] font-bold">
               CORE CAPABILITIES
             </span>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white uppercase mt-2">
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight text-stone-900 uppercase mt-2">
               Engineered For Deep Visual Parsing
             </h2>
           </div>
-          <p className="text-sm md:text-base text-neutral-400 max-w-md">
+          <p className="text-sm md:text-base text-stone-600 max-w-md">
             Built to deconstruct reference cinematography into precise, executable components without hand-waving or hallucination.
           </p>
         </div>
@@ -100,33 +100,33 @@ export function FeaturesSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.08 }}
-                className="group p-7 rounded-2xl bg-neutral-950/70 border border-white/[0.08] hover:border-white/20 transition-all duration-300 flex flex-col justify-between"
+                className="group p-7 rounded-3xl bg-white/75 backdrop-blur-xl border border-white/90 hover:border-[#ff4d00]/40 shadow-[0_10px_30px_-10px_rgba(40,30,20,0.05)] hover:shadow-[0_20px_40px_-15px_rgba(255,77,0,0.1)] transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   {/* Icon & Subtitle Header */}
                   <div className="flex items-center justify-between mb-5">
-                    <div className="w-11 h-11 rounded-xl bg-neutral-900 border border-white/10 flex items-center justify-center text-white group-hover:text-[#ff5500] group-hover:border-[#ff5500]/40 transition-colors">
+                    <div className="w-11 h-11 rounded-2xl bg-orange-50 border border-orange-100 flex items-center justify-center text-stone-700 group-hover:text-[#ff4d00] group-hover:border-[#ff4d00]/30 transition-colors shadow-sm">
                       <Icon className="w-5 h-5" />
                     </div>
-                    <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest px-2.5 py-1 rounded bg-white/[0.04]">
+                    <span className="text-[10px] font-mono text-stone-600 uppercase tracking-widest px-2.5 py-1 rounded-full bg-stone-100 border border-stone-200 font-semibold">
                       {feat.subtitle}
                     </span>
                   </div>
 
                   {/* Title & Description */}
-                  <h3 className="text-xl font-bold text-white tracking-tight mb-2.5 group-hover:text-white transition-colors">
+                  <h3 className="text-xl font-bold text-stone-900 tracking-tight mb-2.5 group-hover:text-stone-900 transition-colors">
                     {feat.title}
                   </h3>
-                  <p className="text-sm text-neutral-400 leading-relaxed mb-6">
+                  <p className="text-sm text-stone-600 leading-relaxed mb-6 font-normal">
                     {feat.description}
                   </p>
                 </div>
 
                 {/* Specs Pill List */}
-                <div className="pt-4 border-t border-white/[0.06] flex flex-col gap-1.5">
+                <div className="pt-4 border-t border-stone-100 flex flex-col gap-1.5">
                   {feat.specs.map((spec, sIdx) => (
-                    <div key={sIdx} className="flex items-center gap-2 text-xs font-mono text-neutral-400">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#ff7700] shrink-0" />
+                    <div key={sIdx} className="flex items-center gap-2 text-xs font-mono text-stone-600">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#ff4d00] shrink-0" />
                       <span>{spec}</span>
                     </div>
                   ))}

@@ -273,21 +273,21 @@ export function InteractiveStudio() {
 
   return (
     <section id="interactive-studio" className="py-20 md:py-28 relative scroll-mt-20">
-      {/* Background accents */}
-      <div className="absolute inset-0 tech-dots pointer-events-none opacity-20" />
+      {/* Background accents in warm cream */}
+      <div className="absolute inset-0 tech-dots pointer-events-none opacity-30" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-6 border-b border-white/[0.08] gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-6 border-b border-stone-200/80 gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-white/[0.05] border border-white/10 text-[11px] font-mono text-[#ff7700] uppercase tracking-wider mb-3">
-              <Activity className="w-3 h-3 text-[#ff5500]" />
-              INTERACTIVE DEMONSTRATION WORKFLOW
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-stone-200 text-xs font-mono text-[#ff4d00] uppercase tracking-wider mb-3 shadow-sm font-semibold">
+              <Activity className="w-3.5 h-3.5 text-[#ff4d00]" />
+              INTERACTIVE DECONSTRUCTION STUDIO
             </div>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white uppercase">
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight text-stone-900 uppercase">
               The Deconstruction Studio
             </h2>
-            <p className="mt-2 text-sm md:text-base text-neutral-400 max-w-xl">
+            <p className="mt-2 text-sm md:text-base text-stone-600 max-w-xl font-normal">
               Inspect live scene segmentation, 6-DoF camera kinematics, Whisper audio stems, and prompt translation engines.
             </p>
           </div>
@@ -296,10 +296,10 @@ export function InteractiveStudio() {
           <div className="flex flex-wrap items-center gap-2">
             {backendStatus ? (
               <span
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-mono ${
+                className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border text-xs font-mono shadow-sm ${
                   backendStatus.healthy
-                    ? "bg-emerald-950/40 border-emerald-500/30 text-emerald-400"
-                    : "bg-amber-950/40 border-amber-500/30 text-amber-400"
+                    ? "bg-emerald-50 border-emerald-200 text-emerald-800"
+                    : "bg-amber-50 border-amber-200 text-amber-800"
                 }`}
               >
                 <Server className="w-3.5 h-3.5" />
@@ -310,17 +310,17 @@ export function InteractiveStudio() {
                 </span>
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-900 border border-white/10 text-xs font-mono text-neutral-400">
-                <Info className="w-3.5 h-3.5 text-[#ff7700]" />
+              <span className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-stone-200 text-xs font-mono text-stone-600 shadow-sm">
+                <Info className="w-3.5 h-3.5 text-[#ff4d00]" />
                 <span>Checking Engine...</span>
               </span>
             )}
 
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ff5500] hover:bg-[#ff6600] text-black font-bold text-xs transition-colors cursor-pointer shadow-lg shadow-[#ff5500]/20"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#ff4d00] to-[#ff6600] hover:from-[#ff5500] hover:to-[#ff7700] text-white font-bold text-xs transition-all cursor-pointer shadow-md shadow-[#ff4d00]/25"
             >
-              <UploadCloud className="w-4 h-4 text-black" />
+              <UploadCloud className="w-4 h-4 text-white" />
               <span>Upload Video to Analyze</span>
             </button>
             <input
@@ -343,22 +343,22 @@ export function InteractiveStudio() {
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              className="mb-6 p-4 rounded-xl bg-red-950/70 border border-red-500/40 shadow-xl flex items-center justify-between gap-4"
+              className="mb-6 p-4 rounded-2xl bg-red-50 border border-red-200 shadow-sm flex items-center justify-between gap-4"
             >
               <div className="flex items-center gap-3">
-                <AlertTriangle className="w-5 h-5 text-red-400 shrink-0" />
+                <AlertTriangle className="w-5 h-5 text-red-600 shrink-0" />
                 <div>
-                  <h5 className="text-xs font-bold text-red-200 font-mono uppercase tracking-wider">
+                  <h5 className="text-xs font-bold text-red-900 font-mono uppercase tracking-wider">
                     Video Analysis Error
                   </h5>
-                  <p className="text-xs text-red-300 font-mono mt-0.5">
+                  <p className="text-xs text-red-700 font-mono mt-0.5">
                     {analysisError}
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setAnalysisError(null)}
-                className="text-xs font-mono text-red-400 hover:text-white px-2.5 py-1 rounded bg-red-900/40 hover:bg-red-900/80 transition-colors cursor-pointer shrink-0"
+                className="text-xs font-mono text-red-700 hover:text-red-900 px-3 py-1 rounded-lg bg-red-100 hover:bg-red-200 transition-colors cursor-pointer shrink-0"
               >
                 Dismiss
               </button>
@@ -368,26 +368,26 @@ export function InteractiveStudio() {
 
         {/* Active Upload Card if file is loaded */}
         {uploadedFileName && (
-          <div className="mb-6 p-4 rounded-xl bg-neutral-900/90 border border-[#ff5500]/50 ring-1 ring-[#ff5500]/30 shadow-lg flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-[#ff5500]/10 border border-[#ff5500]/30 flex items-center justify-center text-[#ff5500]">
+          <div className="mb-6 p-5 rounded-2xl bg-white/90 backdrop-blur-xl border border-[#ff4d00]/40 ring-1 ring-[#ff4d00]/20 shadow-md flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-orange-50 border border-orange-200 flex items-center justify-center text-[#ff4d00]">
                 <FileVideo className="w-5 h-5" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-[#ff5500]/20 text-[#ff7700] font-bold">
+                  <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#ff4d00]/15 text-[#ff4d00] font-bold">
                     USER FOOTAGE (REAL GEMINI ANALYSIS)
                   </span>
-                  <span className="text-xs font-mono text-neutral-400">
+                  <span className="text-xs font-mono text-stone-500">
                     {currentAnalysis.durationSeconds}s • {currentAnalysis.resolution}
                   </span>
                 </div>
-                <h4 className="text-base font-bold text-white mt-0.5">{uploadedFileName}</h4>
+                <h4 className="text-base font-bold text-stone-900 mt-0.5">{uploadedFileName}</h4>
               </div>
             </div>
             <button
               onClick={() => handleSelectPreset(DEMO_PRESETS[0].id)}
-              className="text-xs font-mono text-neutral-400 hover:text-white px-3 py-1.5 rounded-lg bg-neutral-800 border border-white/10 transition-colors cursor-pointer"
+              className="text-xs font-mono text-stone-600 hover:text-stone-900 px-3.5 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 border border-stone-200 transition-colors cursor-pointer"
             >
               Reset to Demo Presets
             </button>
@@ -402,24 +402,24 @@ export function InteractiveStudio() {
               <button
                 key={preset.id}
                 onClick={() => handleSelectPreset(preset.id)}
-                className={`text-left p-4 rounded-xl border transition-all duration-200 cursor-pointer ${
+                className={`text-left p-4 rounded-2xl border transition-all duration-200 cursor-pointer ${
                   isSelected
-                    ? "bg-neutral-900/90 border-[#ff5500]/60 ring-1 ring-[#ff5500]/30 shadow-lg shadow-[#ff5500]/10"
-                    : "bg-neutral-950/60 border-white/[0.08] hover:border-white/20 hover:bg-neutral-900/40"
+                    ? "bg-white border-[#ff4d00] ring-2 ring-[#ff4d00]/20 shadow-md"
+                    : "bg-white/70 backdrop-blur-md border-stone-200/80 hover:border-stone-300 hover:bg-white/90 shadow-sm"
                 }`}
               >
-                <div className="flex items-center justify-between text-xs font-mono text-neutral-400 mb-1">
-                  <span className="text-neutral-500">[DEMO] {preset.category}</span>
-                  <span className="text-[#ff7700] font-semibold">{preset.duration}</span>
+                <div className="flex items-center justify-between text-xs font-mono text-stone-500 mb-1">
+                  <span className="font-semibold text-stone-600">[DEMO] {preset.category}</span>
+                  <span className="text-[#ff4d00] font-bold">{preset.duration}</span>
                 </div>
-                <h4 className="text-base font-bold text-white tracking-tight">{preset.title}</h4>
-                <p className="text-xs text-neutral-400 mt-1 line-clamp-1">{preset.description}</p>
+                <h4 className="text-base font-bold text-stone-900 tracking-tight">{preset.title}</h4>
+                <p className="text-xs text-stone-600 mt-1 line-clamp-1">{preset.description}</p>
                 <div className="mt-3 flex items-center justify-between">
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.05] text-neutral-300">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-stone-100 text-stone-700 border border-stone-200">
                     {preset.badge}
                   </span>
                   {isSelected && (
-                    <span className="text-[11px] font-mono text-[#ff5500] font-semibold flex items-center gap-1">
+                    <span className="text-[11px] font-mono text-[#ff4d00] font-bold flex items-center gap-1">
                       ACTIVE PREVIEW ●
                     </span>
                   )}
@@ -429,18 +429,18 @@ export function InteractiveStudio() {
           })}
         </div>
 
-        {/* Live Processing Simulation Overlay */}
+        {/* Live Processing Overlay */}
         <AnimatePresence>
           {isAnalyzing && (
             <motion.div
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
-              className="mb-8 p-6 rounded-2xl bg-neutral-950 border border-[#ff5500]/40 shadow-2xl relative overflow-hidden"
+              className="mb-8 p-6 rounded-3xl bg-white/90 backdrop-blur-2xl border border-[#ff4d00]/40 shadow-xl relative overflow-hidden"
             >
-              <div className="absolute top-0 left-0 right-0 h-1 bg-neutral-900">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-stone-100">
                 <motion.div
-                  className="h-full bg-gradient-to-r from-[#ff3b30] to-[#ff7700]"
+                  className="h-full bg-gradient-to-r from-[#ff4d00] to-[#ff7700]"
                   style={{ width: `${processingStage?.progressPercent || 15}%` }}
                   transition={{ ease: "easeInOut" }}
                 />
@@ -448,30 +448,30 @@ export function InteractiveStudio() {
 
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-[#ff5500]/10 border border-[#ff5500]/30 flex items-center justify-center text-[#ff5500] animate-spin">
+                  <div className="w-12 h-12 rounded-2xl bg-orange-50 border border-orange-200 flex items-center justify-center text-[#ff4d00] animate-spin">
                     <Sliders className="w-6 h-6" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono text-[#ff7700] uppercase tracking-wider">
-                        STAGE {processingStage?.stage || 1} OF {processingStage?.totalStages || 5}
+                      <span className="text-xs font-mono text-[#ff4d00] uppercase tracking-wider font-bold">
+                        STAGE {processingStage?.stage || 1} OF {processingStage?.totalStages || 4}
                       </span>
-                      <span className="text-xs font-mono text-neutral-500">|</span>
-                      <span className="text-xs font-mono text-neutral-400">
-                        {processingStage?.progressPercent || 10}% COMPLETED
+                      <span className="text-xs font-mono text-stone-300">|</span>
+                      <span className="text-xs font-mono text-stone-600 font-semibold">
+                        {processingStage?.progressPercent || 15}% COMPLETED
                       </span>
                     </div>
-                    <h4 className="text-lg font-bold text-white mt-0.5">
+                    <h4 className="text-lg font-bold text-stone-900 mt-0.5">
                       {processingStage?.title || "Initializing Multimodal Analyzer..."}
                     </h4>
-                    <p className="text-xs text-neutral-400 mt-1 font-mono">
-                      {processingStage?.detail || "Allocating GPU tensor workers and keyframe buffers..."}
+                    <p className="text-xs text-stone-600 mt-1 font-mono">
+                      {processingStage?.detail || "Streaming video bitstream to Google Gemini Files API..."}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono text-neutral-500 px-3 py-1.5 rounded-lg bg-neutral-900 border border-white/10">
+                  <span className="text-xs font-mono text-stone-600 px-3 py-1.5 rounded-xl bg-stone-100 border border-stone-200">
                     File: {uploadedFileName}
                   </span>
                 </div>
@@ -480,35 +480,35 @@ export function InteractiveStudio() {
           )}
         </AnimatePresence>
 
-        {/* Master Studio Workspace (2-Column Studio Layout) */}
+        {/* Master Studio Workspace (2-Column Classic Glass Layout) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* LEFT COLUMN: Video Player & Timeline & Sensor HUD (5 Cols) */}
-          <div className="lg:col-span-5 flex flex-col gap-6">
+          <div className="lg:col-span-5 flex flex-col gap-5">
             
             {/* View Switcher Bar (Player Canvas vs Keyframe Inspector) */}
-            <div className="flex items-center justify-between text-xs font-mono bg-neutral-950 p-1.5 rounded-xl border border-white/[0.08]">
-              <span className="text-neutral-400 px-2 flex items-center gap-1.5">
-                <Film className="w-3.5 h-3.5 text-[#ff5500]" />
+            <div className="flex items-center justify-between text-xs font-mono bg-white/80 backdrop-blur-xl p-1.5 rounded-2xl border border-stone-200/80 shadow-sm">
+              <span className="text-stone-500 px-2 flex items-center gap-1.5 font-semibold">
+                <Film className="w-3.5 h-3.5 text-[#ff4d00]" />
                 FEED MODE:
               </span>
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => setPlayerViewMode("canvas")}
-                  className={`px-3 py-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                     playerViewMode === "canvas"
-                      ? "bg-white text-black font-bold shadow"
-                      : "text-neutral-400 hover:text-white"
+                      ? "bg-stone-900 text-white shadow-sm"
+                      : "text-stone-600 hover:text-stone-900"
                   }`}
                 >
                   Live Player
                 </button>
                 <button
                   onClick={() => setPlayerViewMode("keyframes")}
-                  className={`px-3 py-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                     playerViewMode === "keyframes"
-                      ? "bg-white text-black font-bold shadow"
-                      : "text-neutral-400 hover:text-white"
+                      ? "bg-stone-900 text-white shadow-sm"
+                      : "text-stone-600 hover:text-stone-900"
                   }`}
                 >
                   Keyframe Strip ({currentAnalysis.totalScenes})
@@ -517,11 +517,11 @@ export function InteractiveStudio() {
             </div>
 
             {/* Video Canvas / Keyframe Inspector Container */}
-            <div className="relative rounded-2xl bg-neutral-950 border border-white/10 overflow-hidden shadow-2xl group">
+            <div className="relative rounded-3xl bg-white/80 backdrop-blur-2xl border border-stone-200/80 overflow-hidden shadow-[0_20px_50px_-15px_rgba(40,30,20,0.08)] group">
               
               {playerViewMode === "canvas" ? (
                 /* Interactive Video Canvas View */
-                <div className="relative aspect-[16/9] w-full bg-[#0a0b0e] flex items-center justify-center overflow-hidden">
+                <div className="relative aspect-[16/9] w-full bg-[#0d0d11] flex items-center justify-center overflow-hidden">
                   
                   {/* Real Uploaded Video Player or Preset Backdrop */}
                   {uploadedVideoBlobUrl ? (
@@ -553,13 +553,13 @@ export function InteractiveStudio() {
                     uploadedVideoBlobUrl && isPlaying ? "opacity-0 transition-opacity duration-300" : "opacity-100"
                   }`}>
                     {/* Grid Crosshair Overlays */}
-                    <div className="absolute inset-4 border border-dashed border-white/10 pointer-events-none" />
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 border-t border-b border-[#ff5500]/60 pointer-events-none" />
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 border-l border-r border-[#ff5500]/60 pointer-events-none" />
+                    <div className="absolute inset-4 border border-dashed border-white/15 pointer-events-none" />
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 border-t border-b border-[#ff4d00]/70 pointer-events-none" />
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 border-l border-r border-[#ff4d00]/70 pointer-events-none" />
 
                     {/* Scene Tag Pill */}
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/20 text-xs font-mono text-white mb-3">
-                      <span className="w-2 h-2 rounded-full bg-[#ff5500] animate-pulse" />
+                      <span className="w-2 h-2 rounded-full bg-[#ff4d00] animate-pulse" />
                       SCENE {activeScene.sceneNumber} OF {currentAnalysis.totalScenes}
                     </span>
 
@@ -584,10 +584,10 @@ export function InteractiveStudio() {
 
                   {/* Top Overlay HUD bar */}
                   <div className="absolute top-3 left-3 right-3 flex items-center justify-between text-[11px] font-mono text-neutral-300 z-20 pointer-events-none">
-                    <span className="px-2 py-0.5 rounded bg-black/60 backdrop-blur-sm border border-white/10 text-white font-semibold">
+                    <span className="px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-md border border-white/10 text-white font-semibold">
                       {currentAnalysis.resolution} • {currentAnalysis.fps} FPS
                     </span>
-                    <span className="px-2 py-0.5 rounded bg-black/60 backdrop-blur-sm border border-white/10 text-neutral-300">
+                    <span className="px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-md border border-white/10 text-neutral-300">
                       {currentAnalysis.aspectRatio}
                     </span>
                   </div>
@@ -600,7 +600,7 @@ export function InteractiveStudio() {
                     }`}
                     aria-label={isPlaying ? "Pause video" : "Play video"}
                   >
-                    <div className={`w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/30 flex items-center justify-center text-white group-hover:scale-110 transition-transform shadow-xl ${
+                    <div className={`w-14 h-14 rounded-full bg-white/15 backdrop-blur-md border border-white/40 flex items-center justify-center text-white group-hover:scale-110 transition-transform shadow-xl ${
                       uploadedVideoBlobUrl && isPlaying ? "opacity-0 group-hover:opacity-100" : "opacity-100"
                     }`}>
                       {isPlaying ? <Pause className="w-6 h-6 fill-white" /> : <Play className="w-6 h-6 fill-white ml-0.5" />}
@@ -609,8 +609,8 @@ export function InteractiveStudio() {
                 </div>
               ) : (
                 /* Keyframe Inspector Grid View */
-                <div className="aspect-[16/9] w-full bg-[#0a0b0e] p-4 overflow-y-auto">
-                  <div className="text-xs font-mono text-neutral-400 pb-2 mb-3 border-b border-white/[0.08] flex items-center justify-between">
+                <div className="aspect-[16/9] w-full bg-[#111217] p-4 overflow-y-auto">
+                  <div className="text-xs font-mono text-stone-300 pb-2 mb-3 border-b border-white/[0.08] flex items-center justify-between">
                     <span className="text-[#ff7700] uppercase font-bold flex items-center gap-1.5">
                       <Grid3X3 className="w-3.5 h-3.5" />
                       Extracted Scene Keyframe Gallery
@@ -629,18 +629,18 @@ export function InteractiveStudio() {
                             const startSec = i * (currentAnalysis.durationSeconds / currentAnalysis.totalScenes);
                             handleScrub(startSec);
                           }}
-                          className={`p-3 rounded-xl border text-left cursor-pointer transition-all ${
+                          className={`p-3 rounded-2xl border text-left cursor-pointer transition-all ${
                             isSel
-                              ? "bg-neutral-900 border-[#ff5500] ring-1 ring-[#ff5500]/50"
-                              : "bg-black/50 border-white/[0.06] hover:border-white/20"
+                              ? "bg-neutral-900 border-[#ff4d00] ring-1 ring-[#ff4d00]/50"
+                              : "bg-black/60 border-white/[0.08] hover:border-white/20"
                           }`}
                         >
-                          <div className="flex items-center justify-between text-[10px] font-mono text-neutral-400 mb-1.5">
+                          <div className="flex items-center justify-between text-[10px] font-mono text-stone-400 mb-1.5">
                             <span className="font-bold text-white">Cut #{sc.sceneNumber}</span>
                             <span className="text-[#ff7700]">{sc.timecodeStart}</span>
                           </div>
-                          <div className="h-14 rounded-lg bg-neutral-950 border border-white/5 flex items-center justify-center p-2 mb-2">
-                            <span className="text-[10px] font-mono text-neutral-400 text-center line-clamp-2">
+                          <div className="h-14 rounded-xl bg-neutral-950 border border-white/5 flex items-center justify-center p-2 mb-2">
+                            <span className="text-[10px] font-mono text-stone-300 text-center line-clamp-2">
                               {sc.cameraFraming}
                             </span>
                           </div>
@@ -649,7 +649,7 @@ export function InteractiveStudio() {
                             {currentAnalysis.dominantColorPalette.slice(0, 4).map((c, ci) => (
                               <span key={ci} className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: c }} />
                             ))}
-                            <span className="text-[9px] font-mono text-neutral-500 ml-auto">{sc.durationSeconds}s</span>
+                            <span className="text-[9px] font-mono text-stone-500 ml-auto">{sc.durationSeconds}s</span>
                           </div>
                         </div>
                       );
@@ -659,11 +659,11 @@ export function InteractiveStudio() {
               )}
 
               {/* Scrubber & Timeline Bar */}
-              <div className="p-4 bg-neutral-950 border-t border-white/10">
+              <div className="p-4 bg-white/95 border-t border-stone-200/80">
                 <div className="flex items-center justify-between text-xs font-mono mb-2">
-                  <span className="text-[#ff7700] font-bold">{formatSeconds(currentTime)}</span>
-                  <span className="text-neutral-500">/</span>
-                  <span className="text-neutral-400">{formatSeconds(currentAnalysis.durationSeconds)}</span>
+                  <span className="text-[#ff4d00] font-bold">{formatSeconds(currentTime)}</span>
+                  <span className="text-stone-400">/</span>
+                  <span className="text-stone-600 font-semibold">{formatSeconds(currentAnalysis.durationSeconds)}</span>
                 </div>
 
                 {/* Interactive Scrubber Track */}
@@ -675,7 +675,7 @@ export function InteractiveStudio() {
                     step={0.05}
                     value={currentTime}
                     onChange={(e) => handleScrub(parseFloat(e.target.value))}
-                    className="w-full h-2.5 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-[#ff5500]"
+                    className="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-[#ff4d00]"
                   />
                 </div>
 
@@ -690,14 +690,14 @@ export function InteractiveStudio() {
                           const startSec = idx * (currentAnalysis.durationSeconds / currentAnalysis.totalScenes);
                           handleScrub(startSec);
                         }}
-                        className={`text-left p-1.5 rounded text-[10px] font-mono border transition-all cursor-pointer ${
+                        className={`text-left p-2 rounded-xl text-[10px] font-mono border transition-all cursor-pointer ${
                           isCurrent
-                            ? "bg-[#ff5500]/20 border-[#ff5500] text-white font-bold"
-                            : "bg-neutral-900 border-white/10 text-neutral-400 hover:text-white"
+                            ? "bg-[#ff4d00]/15 border-[#ff4d00] text-stone-900 font-bold"
+                            : "bg-stone-50 border-stone-200 text-stone-600 hover:bg-stone-100 hover:text-stone-900"
                         }`}
                       >
-                        <div className="truncate">Scene {sc.sceneNumber}</div>
-                        <div className="text-[9px] text-neutral-500">{sc.durationSeconds}s</div>
+                        <div className="truncate font-semibold">Scene {sc.sceneNumber}</div>
+                        <div className="text-[9px] text-stone-500">{sc.durationSeconds}s</div>
                       </button>
                     );
                   })}
@@ -706,39 +706,39 @@ export function InteractiveStudio() {
             </div>
 
             {/* Processing Engine Telemetry HUD */}
-            <div className="p-4 rounded-xl bg-neutral-950/70 border border-white/[0.08] text-xs font-mono">
-              <div className="flex items-center justify-between pb-2 mb-3 border-b border-white/[0.06]">
-                <span className="text-neutral-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <Terminal className="w-3.5 h-3.5 text-[#ff5500]" />
+            <div className="p-5 rounded-2xl bg-white/70 backdrop-blur-xl border border-stone-200/80 text-xs font-mono shadow-sm">
+              <div className="flex items-center justify-between pb-2 mb-3 border-b border-stone-200/60">
+                <span className="text-stone-600 uppercase tracking-wider flex items-center gap-1.5 font-bold">
+                  <Terminal className="w-3.5 h-3.5 text-[#ff4d00]" />
                   Engine Telemetry
                 </span>
-                <span className="text-[#ff7700] font-bold">
+                <span className="text-[#ff4d00] font-bold">
                   {Math.round(currentAnalysis.confidenceScore * 100)}% Confidence
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 text-neutral-400">
+              <div className="grid grid-cols-2 gap-3 text-stone-600">
                 <div>
-                  <span className="text-neutral-500 block text-[10px]">FRAMES DECODED</span>
-                  <span className="text-white font-bold text-sm">
+                  <span className="text-stone-400 block text-[10px]">FRAMES DECODED</span>
+                  <span className="text-stone-900 font-bold text-sm">
                     {currentAnalysis.processingMetrics.framesAnalyzed}
                   </span>
                 </div>
                 <div>
-                  <span className="text-neutral-500 block text-[10px]">CUTS SEGMENTED</span>
-                  <span className="text-white font-bold text-sm">
+                  <span className="text-stone-400 block text-[10px]">CUTS SEGMENTED</span>
+                  <span className="text-stone-900 font-bold text-sm">
                     {currentAnalysis.processingMetrics.cutsDetected}
                   </span>
                 </div>
                 <div>
-                  <span className="text-neutral-500 block text-[10px]">SPEECH SEGMENTS</span>
-                  <span className="text-white font-bold text-sm">
+                  <span className="text-stone-400 block text-[10px]">SPEECH SEGMENTS</span>
+                  <span className="text-stone-900 font-bold text-sm">
                     {currentAnalysis.processingMetrics.speechSegmentsIdentified}
                   </span>
                 </div>
                 <div>
-                  <span className="text-neutral-500 block text-[10px]">ANALYSIS LATENCY</span>
-                  <span className="text-white font-bold text-sm">
+                  <span className="text-stone-400 block text-[10px]">ANALYSIS LATENCY</span>
+                  <span className="text-stone-900 font-bold text-sm">
                     {currentAnalysis.processingMetrics.analysisTimeSeconds}s
                   </span>
                 </div>
@@ -749,33 +749,33 @@ export function InteractiveStudio() {
             <div className="flex items-center gap-3">
               <button
                 onClick={handleDownloadMarkdown}
-                className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 border border-white/10 text-xs font-medium text-white transition-colors cursor-pointer"
+                className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-white hover:bg-stone-50 border border-stone-200 text-xs font-semibold text-stone-800 transition-colors cursor-pointer shadow-sm"
               >
-                <Download className="w-3.5 h-3.5 text-neutral-400" />
+                <Download className="w-3.5 h-3.5 text-stone-500" />
                 <span>Export Script (.MD)</span>
               </button>
               <button
                 onClick={handleDownloadJson}
-                className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 border border-white/10 text-xs font-medium text-white transition-colors cursor-pointer"
+                className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-white hover:bg-stone-50 border border-stone-200 text-xs font-semibold text-stone-800 transition-colors cursor-pointer shadow-sm"
               >
-                <Download className="w-3.5 h-3.5 text-neutral-400" />
+                <Download className="w-3.5 h-3.5 text-stone-500" />
                 <span>Export JSON Spec</span>
               </button>
             </div>
           </div>
 
           {/* RIGHT COLUMN: Output Modes (Mode A: Script vs Mode B: Recreation Prompt) (7 Cols) */}
-          <div className="lg:col-span-7 flex flex-col rounded-2xl bg-neutral-950 border border-white/10 shadow-2xl overflow-hidden">
+          <div className="lg:col-span-7 flex flex-col rounded-3xl bg-white/80 backdrop-blur-2xl border border-stone-200/80 shadow-[0_20px_50px_-15px_rgba(40,30,20,0.08)] overflow-hidden">
             
             {/* Top Mode Toggle Tabs */}
-            <div className="p-3 bg-neutral-900/60 border-b border-white/10 flex items-center justify-between gap-2 flex-wrap">
-              <div className="flex items-center gap-1.5 p-1 rounded-xl bg-neutral-950 border border-white/10">
+            <div className="p-3 bg-stone-100/70 border-b border-stone-200/80 flex items-center justify-between gap-2 flex-wrap">
+              <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-white border border-stone-200 shadow-sm">
                 <button
                   onClick={() => setActiveTab("script")}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                     activeTab === "script"
-                      ? "bg-gradient-to-r from-[#ff3b30] to-[#ff7700] text-white shadow-md shadow-[#ff5500]/20"
-                      : "text-neutral-400 hover:text-white"
+                      ? "bg-gradient-to-r from-[#ff4d00] to-[#ff6600] text-white shadow-md shadow-[#ff4d00]/20"
+                      : "text-stone-600 hover:text-stone-900"
                   }`}
                 >
                   <FileText className="w-3.5 h-3.5" />
@@ -784,10 +784,10 @@ export function InteractiveStudio() {
 
                 <button
                   onClick={() => setActiveTab("prompt")}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                     activeTab === "prompt"
-                      ? "bg-gradient-to-r from-[#ff3b30] to-[#ff7700] text-white shadow-md shadow-[#ff5500]/20"
-                      : "text-neutral-400 hover:text-white"
+                      ? "bg-gradient-to-r from-[#ff4d00] to-[#ff6600] text-white shadow-md shadow-[#ff4d00]/20"
+                      : "text-stone-600 hover:text-stone-900"
                   }`}
                 >
                   <Wand2 className="w-3.5 h-3.5" />
@@ -804,16 +804,16 @@ export function InteractiveStudio() {
                     handleCopy(synthesizedPrompt, "prompt");
                   }
                 }}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 border border-white/10 text-xs font-mono text-neutral-200 transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-stone-50 border border-stone-200 text-xs font-mono font-semibold text-stone-700 transition-colors cursor-pointer shadow-sm"
               >
                 {copiedState ? (
                   <>
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
-                    <span className="text-emerald-400">Copied!</span>
+                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                    <span className="text-emerald-700">Copied!</span>
                   </>
                 ) : (
                   <>
-                    <Copy className="w-3.5 h-3.5 text-neutral-400" />
+                    <Copy className="w-3.5 h-3.5 text-stone-400" />
                     <span>Copy {activeTab === "script" ? "Script" : "Prompt"}</span>
                   </>
                 )}
@@ -822,26 +822,26 @@ export function InteractiveStudio() {
 
             {/* TAB CONTENT A: VIDEO TO SCRIPT */}
             {activeTab === "script" && (
-              <div className="p-6 flex flex-col gap-6 max-h-[780px] overflow-y-auto">
+              <div className="p-6 flex flex-col gap-5 max-h-[780px] overflow-y-auto">
                 {/* Overall Direction Note */}
-                <div className="p-4 rounded-xl bg-neutral-900/40 border border-white/[0.08] flex flex-col gap-2">
-                  <div className="flex items-center justify-between text-xs font-mono text-neutral-400">
-                    <span className="text-neutral-300 font-semibold uppercase">Overall Direction & Tone</span>
-                    <span className="text-[#ff7700]">TC: 00:00:00.00 - {currentAnalysis.durationSeconds}s</span>
+                <div className="p-5 rounded-2xl bg-[#faf8f5] border border-stone-200/80 flex flex-col gap-2">
+                  <div className="flex items-center justify-between text-xs font-mono text-stone-500">
+                    <span className="text-stone-900 font-bold uppercase">Overall Direction & Tone</span>
+                    <span className="text-[#ff4d00] font-semibold">TC: 00:00:00.00 - {currentAnalysis.durationSeconds}s</span>
                   </div>
-                  <p className="text-sm text-neutral-200 leading-relaxed">
-                    <strong className="text-white">Mood:</strong> {currentAnalysis.modeAScript.overallMood}
+                  <p className="text-sm text-stone-800 leading-relaxed">
+                    <strong className="text-stone-900">Mood:</strong> {currentAnalysis.modeAScript.overallMood}
                   </p>
-                  <p className="text-xs text-neutral-400 font-mono">
-                    <strong className="text-neutral-300">Pacing:</strong> {currentAnalysis.modeAScript.pacing}
+                  <p className="text-xs text-stone-600 font-mono">
+                    <strong className="text-stone-800">Pacing:</strong> {currentAnalysis.modeAScript.pacing}
                   </p>
                 </div>
 
                 {/* Scene-by-Scene Script Breakdown Cards */}
                 <div className="flex flex-col gap-4">
-                  <h4 className="text-xs font-mono text-neutral-400 uppercase tracking-widest flex items-center justify-between">
-                    <span>Scene Breakdown Sequence ({currentAnalysis.modeAScript.scenes.length} Scenes)</span>
-                    <span className="text-[#ff5500] text-[11px]">Click any scene to scrub</span>
+                  <h4 className="text-xs font-mono text-stone-500 uppercase tracking-widest flex items-center justify-between">
+                    <span className="font-bold">Scene Sequence ({currentAnalysis.modeAScript.scenes.length} Scenes)</span>
+                    <span className="text-[#ff4d00] text-[11px] font-semibold">Click any scene to scrub</span>
                   </h4>
 
                   {currentAnalysis.modeAScript.scenes.map((scene, idx) => {
@@ -855,45 +855,45 @@ export function InteractiveStudio() {
                             idx * (currentAnalysis.durationSeconds / currentAnalysis.totalScenes)
                           );
                         }}
-                        className={`p-5 rounded-xl border transition-all cursor-pointer ${
+                        className={`p-5 rounded-2xl border transition-all cursor-pointer ${
                           isSelected
-                            ? "bg-neutral-900 border-[#ff5500]/70 ring-1 ring-[#ff5500]/40 shadow-xl"
-                            : "bg-neutral-950/40 border-white/[0.06] hover:border-white/20 hover:bg-neutral-900/30"
+                            ? "bg-white border-[#ff4d00] ring-2 ring-[#ff4d00]/20 shadow-lg"
+                            : "bg-white/80 border-stone-200/80 hover:border-stone-300 hover:bg-white shadow-sm"
                         }`}
                       >
                         {/* Scene Header Strip */}
-                        <div className="flex items-center justify-between text-xs font-mono pb-3 mb-3 border-b border-white/[0.06]">
-                          <span className="font-bold text-white flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-[#ff5500]" />
+                        <div className="flex items-center justify-between text-xs font-mono pb-3 mb-3 border-b border-stone-100">
+                          <span className="font-bold text-stone-900 flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-[#ff4d00]" />
                             SCENE {scene.sceneNumber}
                           </span>
-                          <span className="text-neutral-400">
+                          <span className="text-stone-500">
                             [{scene.timecodeStart} → {scene.timecodeEnd}] ({scene.durationSeconds}s)
                           </span>
                         </div>
 
                         {/* Visual Summary */}
-                        <p className="text-sm text-neutral-200 font-medium leading-relaxed mb-4">
+                        <p className="text-sm text-stone-800 font-medium leading-relaxed mb-4">
                           {scene.visualSummary}
                         </p>
 
                         {/* Grid Breakdown: Camera, Lighting, Environment, Objects */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs mb-4">
-                          <div className="p-3 rounded-lg bg-black/40 border border-white/[0.05]">
-                            <span className="text-[10px] font-mono uppercase text-neutral-400 flex items-center gap-1.5 mb-1">
-                              <Camera className="w-3 h-3 text-[#ff5500]" />
+                          <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-200/70">
+                            <span className="text-[10px] font-mono uppercase text-stone-500 flex items-center gap-1.5 mb-1 font-semibold">
+                              <Camera className="w-3 h-3 text-[#ff4d00]" />
                               Camera Movement & Framing
                             </span>
-                            <p className="text-neutral-200 font-medium">{scene.cameraFraming}</p>
-                            <p className="text-neutral-400 text-[11px] mt-0.5">{scene.cameraMovement}</p>
+                            <p className="text-stone-900 font-semibold">{scene.cameraFraming}</p>
+                            <p className="text-stone-600 text-[11px] mt-0.5">{scene.cameraMovement}</p>
                           </div>
 
-                          <div className="p-3 rounded-lg bg-black/40 border border-white/[0.05]">
-                            <span className="text-[10px] font-mono uppercase text-neutral-400 flex items-center gap-1.5 mb-1">
-                              <Eye className="w-3 h-3 text-[#ff5500]" />
+                          <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-200/70">
+                            <span className="text-[10px] font-mono uppercase text-stone-500 flex items-center gap-1.5 mb-1 font-semibold">
+                              <Eye className="w-3 h-3 text-[#ff4d00]" />
                               Lighting & Atmosphere
                             </span>
-                            <p className="text-neutral-300 text-[11px] leading-relaxed">
+                            <p className="text-stone-700 text-[11px] leading-relaxed">
                               {scene.lightingAndAtmosphere}
                             </p>
                           </div>
@@ -901,17 +901,17 @@ export function InteractiveStudio() {
 
                         {/* Dialogue / Spoken Word Transcription */}
                         {scene.dialogue && scene.dialogue.length > 0 && (
-                          <div className="p-3 rounded-lg bg-amber-500/[0.05] border border-amber-500/20 mb-3 text-xs">
-                            <span className="text-[10px] font-mono uppercase text-amber-400 font-bold block mb-1">
+                          <div className="p-3.5 rounded-xl bg-orange-50/70 border border-orange-200 mb-3 text-xs">
+                            <span className="text-[10px] font-mono uppercase text-orange-800 font-bold block mb-1">
                               Speech Transcription (Whisper v3)
                             </span>
                             {scene.dialogue.map((d, dIdx) => (
-                              <div key={dIdx} className="text-amber-100 italic">
-                                <span className="font-mono not-italic font-bold text-amber-300 uppercase mr-2">
+                              <div key={dIdx} className="text-stone-800 italic">
+                                <span className="font-mono not-italic font-bold text-[#ff4d00] uppercase mr-2">
                                   {d.speaker}:
                                 </span>
                                 "{d.text}"
-                                <span className="text-[9px] not-italic font-mono text-amber-400/70 ml-2">
+                                <span className="text-[9px] not-italic font-mono text-stone-500 ml-2">
                                   ({Math.round(d.confidence * 100)}% conf)
                                 </span>
                               </div>
@@ -920,21 +920,21 @@ export function InteractiveStudio() {
                         )}
 
                         {/* Sound Design & Foley Stems */}
-                        <div className="p-3 rounded-lg bg-black/40 border border-white/[0.05] text-xs">
-                          <span className="text-[10px] font-mono uppercase text-neutral-400 flex items-center gap-1.5 mb-1">
+                        <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-200/70 text-xs">
+                          <span className="text-[10px] font-mono uppercase text-stone-500 flex items-center gap-1.5 mb-1 font-semibold">
                             <Volume2 className="w-3 h-3 text-[#ff7700]" />
                             Audio & Foley Stems
                           </span>
-                          <p className="text-neutral-300 text-[11px]">
-                            <strong className="text-neutral-400">Score:</strong> {scene.audioNotes.music}
+                          <p className="text-stone-700 text-[11px]">
+                            <strong className="text-stone-800">Score:</strong> {scene.audioNotes.music}
                           </p>
-                          <p className="text-neutral-300 text-[11px] mt-1">
-                            <strong className="text-neutral-400">SFX:</strong> {scene.audioNotes.foleyAndSfx.join(", ")}
+                          <p className="text-stone-700 text-[11px] mt-1">
+                            <strong className="text-stone-800">SFX:</strong> {scene.audioNotes.foleyAndSfx.join(", ")}
                           </p>
                         </div>
 
                         {/* Cut Transition Marker */}
-                        <div className="mt-3 pt-2 flex items-center justify-between text-[11px] font-mono text-neutral-500 border-t border-white/[0.04]">
+                        <div className="mt-3 pt-2 flex items-center justify-between text-[11px] font-mono text-stone-400 border-t border-stone-100">
                           <span>Transition: {scene.transitionToNext}</span>
                         </div>
                       </div>
@@ -948,8 +948,8 @@ export function InteractiveStudio() {
             {activeTab === "prompt" && (
               <div className="p-6 flex flex-col gap-6 max-h-[780px] overflow-y-auto">
                 {/* Target Model Sub-selector Tabs */}
-                <div className="flex items-center gap-2 border-b border-white/[0.08] pb-3 overflow-x-auto">
-                  <span className="text-xs font-mono text-neutral-500 uppercase mr-1">Target Engine:</span>
+                <div className="flex items-center gap-2 border-b border-stone-200/80 pb-3 overflow-x-auto">
+                  <span className="text-xs font-mono text-stone-500 uppercase mr-1 font-semibold">Target Engine:</span>
                   {[
                     { id: "runway", label: "Runway Gen-3" },
                     { id: "sora", label: "OpenAI Sora" },
@@ -959,10 +959,10 @@ export function InteractiveStudio() {
                     <button
                       key={engine.id}
                       onClick={() => setActivePromptEngine(engine.id as any)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer ${
+                      className={`px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer ${
                         activePromptEngine === engine.id
-                          ? "bg-white text-black font-bold shadow"
-                          : "text-neutral-400 hover:text-white bg-neutral-900 border border-white/5"
+                          ? "bg-stone-900 text-white font-bold shadow-sm"
+                          : "text-stone-600 hover:text-stone-900 bg-white border border-stone-200/80"
                       }`}
                     >
                       {engine.label}
@@ -971,21 +971,21 @@ export function InteractiveStudio() {
                 </div>
 
                 {/* Interactive Prompt Tuning Toolbar */}
-                <div className="p-4 rounded-xl bg-neutral-900/60 border border-white/[0.08] flex flex-col gap-3">
-                  <div className="flex items-center justify-between text-xs font-mono text-neutral-400">
-                    <span className="text-white font-bold uppercase flex items-center gap-1.5">
-                      <Zap className="w-3.5 h-3.5 text-[#ff5500]" />
+                <div className="p-5 rounded-2xl bg-[#faf8f5] border border-stone-200/80 flex flex-col gap-4">
+                  <div className="flex items-center justify-between text-xs font-mono text-stone-600">
+                    <span className="text-stone-900 font-bold uppercase flex items-center gap-1.5">
+                      <Zap className="w-3.5 h-3.5 text-[#ff4d00]" />
                       Interactive Prompt Tuning Playground
                     </span>
-                    <span className="text-xs text-neutral-500">Live Re-synthesis</span>
+                    <span className="text-xs text-stone-500">Live Re-synthesis</span>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs font-mono">
                     {/* Motion Intensity Slider */}
                     <div>
-                      <div className="flex justify-between mb-1 text-neutral-400 text-[11px]">
+                      <div className="flex justify-between mb-1 text-stone-500 text-[11px]">
                         <span>Motion Scale:</span>
-                        <span className="text-[#ff7700] font-bold">{motionIntensity}/10</span>
+                        <span className="text-[#ff4d00] font-bold">{motionIntensity}/10</span>
                       </div>
                       <input
                         type="range"
@@ -993,90 +993,84 @@ export function InteractiveStudio() {
                         max={10}
                         value={motionIntensity}
                         onChange={(e) => setMotionIntensity(parseInt(e.target.value))}
-                        className="w-full accent-[#ff5500] cursor-pointer"
+                        className="w-full h-1.5 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-[#ff4d00]"
                       />
                     </div>
 
-                    {/* Film Stock Preset */}
+                    {/* Film Stock Grade */}
                     <div>
-                      <span className="block text-[11px] text-neutral-400 mb-1">Film Stock / Grain:</span>
+                      <label className="block mb-1 text-stone-500 text-[11px]">Film Stock:</label>
                       <select
                         value={selectedFilmGrade}
                         onChange={(e) => setSelectedFilmGrade(e.target.value)}
-                        className="w-full bg-neutral-950 border border-white/10 rounded-lg p-1.5 text-neutral-200 text-xs focus:outline-none focus:border-[#ff5500]"
+                        className="w-full p-1.5 rounded-xl bg-white border border-stone-200 text-stone-800 text-xs focus:outline-none"
                       >
                         <option value="Kodak Vision3 500T">Kodak Vision3 500T</option>
-                        <option value="Technicolor 3-Strip">Technicolor 3-Strip</option>
-                        <option value="Bleach Bypass Noir">Bleach Bypass Noir</option>
                         <option value="Fujifilm Eterna 250D">Fujifilm Eterna 250D</option>
-                        <option value="Arri Alexa Mini LF 8K">Arri Alexa Mini LF 8K</option>
+                        <option value="Technicolor 3-Strip">Technicolor 3-Strip</option>
+                        <option value="Bleach Bypass 35mm">Bleach Bypass 35mm</option>
+                        <option value="Monochrome Tri-X">Monochrome Tri-X</option>
                       </select>
                     </div>
 
-                    {/* Camera Stabilization Mode */}
+                    {/* Camera Motion Directives */}
                     <div>
-                      <span className="block text-[11px] text-neutral-400 mb-1">Camera Trajectory:</span>
+                      <label className="block mb-1 text-stone-500 text-[11px]">Camera Rig:</label>
                       <select
                         value={cameraMotionModifier}
                         onChange={(e) => setCameraMotionModifier(e.target.value)}
-                        className="w-full bg-neutral-950 border border-white/10 rounded-lg p-1.5 text-neutral-200 text-xs focus:outline-none focus:border-[#ff5500]"
+                        className="w-full p-1.5 rounded-xl bg-white border border-stone-200 text-stone-800 text-xs focus:outline-none"
                       >
-                        <option value="dynamic">Dynamic Drift</option>
-                        <option value="steadicam">Steadicam Track</option>
+                        <option value="dynamic">Default Trajectory</option>
+                        <option value="steadicam">Steadicam Glide</option>
                         <option value="fpv">Acrobatic FPV Drone</option>
-                        <option value="locked">Locked Studio Tripod</option>
+                        <option value="locked">Locked Tripod</option>
                       </select>
                     </div>
                   </div>
                 </div>
 
-                {/* Master Generated Prompt Box */}
-                <div className="p-5 rounded-xl bg-neutral-900/80 border border-[#ff5500]/40 relative group">
-                  <div className="flex items-center justify-between text-xs font-mono pb-2 mb-3 border-b border-white/[0.08]">
-                    <span className="text-[#ff7700] uppercase font-bold flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5" />
-                      Synthesized Master Prompt ({basePromptData.targetModel})
+                {/* Master Synthesized Latent Prompt Card */}
+                <div className="p-5 rounded-2xl bg-stone-50 border border-stone-200 text-stone-900 shadow-sm relative group">
+                  <div className="flex items-center justify-between text-xs font-mono text-stone-500 pb-3 mb-3 border-b border-stone-200/60">
+                    <span className="uppercase text-stone-700 font-bold flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-[#ff4d00]" />
+                      Master Latent Prompt ({basePromptData.targetModel})
                     </span>
                     <button
-                      onClick={() => handleCopy(synthesizedPrompt, "master-prompt")}
-                      className="text-xs font-mono text-neutral-300 hover:text-white flex items-center gap-1 cursor-pointer"
+                      onClick={() => handleCopy(synthesizedPrompt, "masterPrompt")}
+                      className="text-stone-500 hover:text-stone-900 text-xs font-mono flex items-center gap-1 cursor-pointer"
                     >
-                      {copiedState === "master-prompt" ? (
-                        <span className="text-emerald-400">Copied to clipboard</span>
-                      ) : (
-                        <>
-                          <Copy className="w-3 h-3" />
-                          <span>Copy</span>
-                        </>
-                      )}
+                      <Copy className="w-3 h-3" />
+                      <span>{copiedState === "masterPrompt" ? "Copied" : "Copy"}</span>
                     </button>
                   </div>
 
-                  <p className="text-sm text-white font-mono leading-relaxed select-all">
+                  <p className="text-sm text-stone-900 font-mono leading-relaxed select-all">
                     {synthesizedPrompt}
                   </p>
                 </div>
 
                 {/* Negative Prompt if available */}
                 {basePromptData.negativePrompt && (
-                  <div className="p-4 rounded-xl bg-neutral-950 border border-rose-500/20 text-xs font-mono">
-                    <span className="text-rose-400 uppercase font-bold block mb-1">
+                  <div className="p-4 rounded-2xl bg-rose-50/70 border border-rose-200 text-xs font-mono">
+                    <span className="text-rose-700 uppercase font-bold block mb-1">
                       Negative Prompt (Avoid Artifacts & Distortion)
                     </span>
-                    <p className="text-neutral-300 select-all">{basePromptData.negativePrompt}</p>
+                    <p className="text-stone-800 select-all">{basePromptData.negativePrompt}</p>
                   </div>
                 )}
 
                 {/* Style Keywords Pills */}
                 <div>
-                  <h5 className="text-xs font-mono text-neutral-400 uppercase tracking-widest mb-2">
+                  <h5 className="text-xs font-mono text-stone-500 uppercase tracking-widest mb-2 font-bold">
                     Style Tokens & Latent Weights
                   </h5>
                   <div className="flex flex-wrap gap-2">
                     {basePromptData.styleKeywords.map((tag, i) => (
                       <span
                         key={i}
-                        className="text-xs font-mono px-3 py-1 rounded-full bg-neutral-900 border border-white/10 text-neutral-200"
+                        className="text-xs font-mono px-3 py-1 rounded-full bg-stone-100 border border-stone-200 text-stone-700"
                       >
                         +{tag}
                       </span>
@@ -1085,50 +1079,50 @@ export function InteractiveStudio() {
                 </div>
 
                 {/* Technical Directive Breakdown Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                  <div className="p-4 rounded-xl bg-black/40 border border-white/[0.06]">
-                    <span className="text-[10px] font-mono uppercase text-neutral-400 block mb-1">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                  <div className="p-4 rounded-xl bg-stone-50 border border-stone-200/70">
+                    <span className="text-[10px] font-mono uppercase text-stone-500 block mb-1 font-bold">
                       Camera Trajectory Directive
                     </span>
-                    <p className="text-neutral-200 leading-relaxed font-medium">
+                    <p className="text-stone-800 leading-relaxed font-medium">
                       {basePromptData.cameraDirectives}
                     </p>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-black/40 border border-white/[0.06]">
-                    <span className="text-[10px] font-mono uppercase text-neutral-400 block mb-1">
+                  <div className="p-4 rounded-xl bg-stone-50 border border-stone-200/70">
+                    <span className="text-[10px] font-mono uppercase text-stone-500 block mb-1 font-bold">
                       Lighting & Volumetric Instruction
                     </span>
-                    <p className="text-neutral-200 leading-relaxed font-medium">
+                    <p className="text-stone-800 leading-relaxed font-medium">
                       {basePromptData.lightingDirective}
                     </p>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-black/40 border border-white/[0.06]">
-                    <span className="text-[10px] font-mono uppercase text-neutral-400 block mb-1">
+                  <div className="p-4 rounded-xl bg-stone-50 border border-stone-200/70">
+                    <span className="text-[10px] font-mono uppercase text-stone-500 block mb-1 font-bold">
                       Compositional Geometry
                     </span>
-                    <p className="text-neutral-200 leading-relaxed font-medium">
+                    <p className="text-stone-800 leading-relaxed font-medium">
                       {basePromptData.compositionDirective}
                     </p>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-black/40 border border-white/[0.06]">
-                    <span className="text-[10px] font-mono uppercase text-neutral-400 block mb-1">
+                  <div className="p-4 rounded-xl bg-stone-50 border border-stone-200/70">
+                    <span className="text-[10px] font-mono uppercase text-stone-500 block mb-1 font-bold">
                       Kinetic Velocity & Pacing
                     </span>
-                    <p className="text-neutral-200 leading-relaxed font-medium">
+                    <p className="text-stone-800 leading-relaxed font-medium">
                       {basePromptData.motionPacing}
                     </p>
                   </div>
                 </div>
 
                 {/* Temporal Consistency Guidance */}
-                <div className="p-4 rounded-xl bg-neutral-900/50 border border-white/[0.08] text-xs">
-                  <span className="text-xs font-mono text-[#ff7700] uppercase font-bold block mb-2">
+                <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200 text-xs">
+                  <span className="text-xs font-mono text-amber-900 uppercase font-bold block mb-2">
                     Temporal Consistency Hints (Prevent Frame Jitter)
                   </span>
-                  <ul className="list-disc list-inside space-y-1 text-neutral-300 font-mono text-[11px]">
+                  <ul className="list-disc list-inside space-y-1 text-stone-700 font-mono text-[11px]">
                     {basePromptData.temporalConsistencyHints.map((hint, i) => (
                       <li key={i}>{hint}</li>
                     ))}
@@ -1136,7 +1130,7 @@ export function InteractiveStudio() {
                 </div>
 
                 {/* Specs metadata footer */}
-                <div className="flex items-center justify-between text-xs font-mono text-neutral-500 pt-2 border-t border-white/[0.06]">
+                <div className="flex items-center justify-between text-xs font-mono text-stone-500 pt-2 border-t border-stone-200">
                   <span>Target Aspect: {basePromptData.aspectRatio}</span>
                   <span>Recommended Framerate: {basePromptData.recommendedFps} FPS</span>
                 </div>
