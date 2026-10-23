@@ -16,18 +16,48 @@ export interface AnalysisOptions {
   detectText?: boolean;
 }
 
-const FASTAPI_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
+const FASTAPI_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+/**
+ * Check if the backend API is reachable and healthy.
+ */
+export async function checkBackendHealth(): Promise<{
+  healthy: boolean;
+  gemini_configured?: boolean;
+  default_model?: string;
+  error?: string;
+}> {
+  try {
+    const res = await fetch(`${FASTAPI_BASE_URL}/health`, {
+      method: "GET",
+      cache: "no-store",
+    });
+    if (!res.ok) {
+      return { healthy: false, error: `Status ${res.status}: ${res.statusText}` };
+    }
+    const data = await res.json();
+    return {
+      healthy: true,
+      gemini_configured: data.gemini_configured,
+      default_model: data.default_model,
+    };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    return { healthy: false, error: message };
+  }
+}
 
 /**
  * Service to handle video reverse-engineering analysis.
- * Ready for drop-in FastAPI multimodal Python backend integration.
+ * Connects directly to the live Google Gemini FastAPI backend.
  */
 export async function reverseEngineerVideo(
   videoFileOrPresetId: File | string,
   options?: AnalysisOptions,
   onProgress?: (progress: ProcessingStage) => void
 ): Promise<VideoAnalysisResult> {
-  // If it's an existing preset ID
+  // If it's an existing demonstration preset ID, return demo preset data immediately
   if (typeof videoFileOrPresetId === "string") {
     const preset = DEMO_PRESETS.find((p) => p.id === videoFileOrPresetId);
     if (preset) {
@@ -35,96 +65,105 @@ export async function reverseEngineerVideo(
     }
   }
 
-  // If a live FastAPI backend is configured
-  if (FASTAPI_BASE_URL && typeof videoFileOrPresetId !== "string") {
-    try {
-      const formData = new FormData();
-      formData.append("file", videoFileOrPresetId);
-      if (options) {
-        formData.append("options", JSON.stringify(options));
-      }
+  // Real uploaded file: communicate directly with FastAPI backend
+  if (typeof videoFileOrPresetId !== "string") {
+    const file = videoFileOrPresetId;
 
+    if (onProgress) {
+      onProgress({
+        stage: 1,
+        totalStages: 4,
+        title: "Uploading Video Stream",
+        detail: `Streaming ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB) to backend...`,
+        progressPercent: 20,
+      });
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    if (options) {
+      formData.append("options", JSON.stringify(options));
+    }
+
+    let progressTimer: NodeJS.Timeout | null = null;
+    let currentPct = 25;
+
+    // Simulate progress updates while backend communicates with Gemini
+    if (onProgress) {
+      progressTimer = setInterval(() => {
+        currentPct = Math.min(currentPct + 4, 92);
+        let title = "Gemini Multimodal Ingestion";
+        let detail = "Processing video frames and optical motion vectors with Google Gemini...";
+        let stageNum = 2;
+
+        if (currentPct > 55) {
+          stageNum = 3;
+          title = "Deconstructing Scenes & Dialogue";
+          detail = "Extracting scene boundaries, timecodes, camera trajectories, and vocal audio stems...";
+        }
+        if (currentPct > 80) {
+          stageNum = 4;
+          title = "Synthesizing Recreation Prompts";
+          detail = "Calibrating latent diffusion tokens for Runway Gen-3, OpenAI Sora, and Kling AI...";
+        }
+
+        onProgress({
+          stage: stageNum,
+          totalStages: 4,
+          title,
+          detail,
+          progressPercent: currentPct,
+        });
+      }, 1500);
+    }
+
+    try {
       const response = await fetch(`${FASTAPI_BASE_URL}/api/v1/analyze`, {
         method: "POST",
         body: formData,
       });
 
+      if (progressTimer) clearInterval(progressTimer);
+
       if (!response.ok) {
-        throw new Error(`Backend error: ${response.statusText}`);
+        let errMessage = `Server error ${response.status}: ${response.statusText}`;
+        try {
+          const errData = await response.json();
+          if (errData.detail) {
+            errMessage = typeof errData.detail === "string" ? errData.detail : JSON.stringify(errData.detail);
+          }
+        } catch {
+          // keep fallback errMessage
+        }
+        throw new Error(errMessage);
       }
 
-      return (await response.json()) as VideoAnalysisResult;
-    } catch (err) {
-      console.warn("FastAPI backend connection failed, falling back to local simulation engine:", err);
+      if (onProgress) {
+        onProgress({
+          stage: 4,
+          totalStages: 4,
+          title: "Analysis Finalized",
+          detail: "Calibration complete. Synchronizing master production script and prompt playground.",
+          progressPercent: 100,
+        });
+      }
+
+      const result = (await response.json()) as VideoAnalysisResult;
+      return result;
+    } catch (err: unknown) {
+      if (progressTimer) clearInterval(progressTimer);
+      const message = err instanceof Error ? err.message : String(err);
+      if (message.includes("Failed to fetch") || message.includes("NetworkError")) {
+        throw new Error(
+          `Cannot connect to FastAPI backend at ${FASTAPI_BASE_URL}. Ensure 'uvicorn main:app --reload --port 8000' is running.`
+        );
+      }
+      throw new Error(message);
     }
   }
 
-  // Local Autonomous Simulation Engine with realistic pipeline steps
-  const stages: { title: string; detail: string; durationMs: number }[] = [
-    {
-      title: "Demuxing Video Stream",
-      detail: "Initializing container parse, extracting H.264/ProRes bitstream and keyframes...",
-      durationMs: 700,
-    },
-    {
-      title: "Boundary & Cut Detection",
-      detail: "Evaluating temporal optical flow and luminance histogram spikes for scene segmentation...",
-      durationMs: 900,
-    },
-    {
-      title: "Visual Semantic & Camera Solver",
-      detail: "Computing 3D camera trajectory (pan, tilt, crane) and subject spatial bounding boxes...",
-      durationMs: 1100,
-    },
-    {
-      title: "Multitrack Audio Separation",
-      detail: "Demuxing dialogue stems via Whisper AI and cataloging ambient foley frequencies...",
-      durationMs: 800,
-    },
-    {
-      title: "Recreation Prompt Synthesis",
-      detail: "Formulating latent diffusion descriptors for Runway Gen-3, OpenAI Sora, and Kling AI...",
-      durationMs: 700,
-    },
-  ];
-
-  const fileName = typeof videoFileOrPresetId === "string" ? "Reference Video" : videoFileOrPresetId.name;
-  let accumulatedProgress = 0;
-
-  for (let i = 0; i < stages.length; i++) {
-    const stage = stages[i];
-    accumulatedProgress = Math.round(((i + 1) / stages.length) * 100);
-
-    if (onProgress) {
-      onProgress({
-        stage: i + 1,
-        totalStages: stages.length,
-        title: stage.title,
-        detail: stage.detail,
-        progressPercent: accumulatedProgress,
-      });
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, stage.durationMs));
-  }
-
-  // Generate dynamic customized result based on the uploaded file
-  const basePreset = DEMO_PRESETS[0].data;
-  const customResult: VideoAnalysisResult = {
-    ...basePreset,
-    videoId: `custom-upload-${Date.now()}`,
-    title: fileName.replace(/\.[^/.]+$/, "").replace(/[_-]/g, " "),
-    confidenceScore: 0.97,
-    processingMetrics: {
-      framesAnalyzed: 1420,
-      speechSegmentsIdentified: 3,
-      cutsDetected: 4,
-      audioStemsSeparated: 4,
-      analysisTimeSeconds: 4.2,
-    },
-  };
-
-  return customResult;
+  // Fallback preset if string was not found
+  return DEMO_PRESETS[0].data;
 }
 
 /**
@@ -145,7 +184,7 @@ export function exportScriptAsMarkdown(result: VideoAnalysisResult): string {
     md += `**Lighting & Atmosphere:** ${scene.lightingAndAtmosphere}\n\n`;
     md += `**Camera Framing & Movement:** ${scene.cameraFraming} — ${scene.cameraMovement}\n\n`;
 
-    if (scene.subjectsAndObjects.length > 0) {
+    if (scene.subjectsAndObjects && scene.subjectsAndObjects.length > 0) {
       md += `**Subjects & Props:** ${scene.subjectsAndObjects.join(", ")}\n\n`;
     }
 
@@ -170,7 +209,7 @@ export function exportScriptAsMarkdown(result: VideoAnalysisResult): string {
     md += `---\n\n`;
   });
 
-  md += `*Generated automatically by DECONSTRUCT // AI Video Reverse-Engineering Platform.*`;
+  md += `*Generated automatically by DECONSTRUCT // AI Video Reverse-Engineering Platform with Google Gemini.*`;
   return md;
 }
 

@@ -29,11 +29,20 @@ import {
   Grid3X3,
   Film,
   Zap,
-  RotateCcw
+  RotateCcw,
+  AlertTriangle,
+  Server,
+  XCircle
 } from "lucide-react";
 import { DEMO_PRESETS } from "@/data/mockAnalysis";
 import { VideoAnalysisResult, SceneScriptItem } from "@/types/analysis";
-import { reverseEngineerVideo, ProcessingStage, exportScriptAsMarkdown, exportAnalysisAsJson } from "@/services/api";
+import {
+  reverseEngineerVideo,
+  checkBackendHealth,
+  ProcessingStage,
+  exportScriptAsMarkdown,
+  exportAnalysisAsJson
+} from "@/services/api";
 
 export function InteractiveStudio() {
   const [selectedPresetId, setSelectedPresetId] = useState<string>("preset-cyberpunk-chase");
@@ -54,17 +63,42 @@ export function InteractiveStudio() {
   const [selectedFilmGrade, setSelectedFilmGrade] = useState<string>("Kodak Vision3 500T");
   const [cameraMotionModifier, setCameraMotionModifier] = useState<string>("dynamic");
 
-  // Processing simulation state
+  // Processing & Backend state
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [processingStage, setProcessingStage] = useState<ProcessingStage | null>(null);
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
+  const [uploadedVideoBlobUrl, setUploadedVideoBlobUrl] = useState<string | null>(null);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
+  const [backendStatus, setBackendStatus] = useState<{ healthy: boolean; default_model?: string } | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const playbackTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Playback timer simulation
+  // Check backend health on mount
   useEffect(() => {
-    if (isPlaying) {
+    checkBackendHealth().then((status) => {
+      setBackendStatus({
+        healthy: status.healthy,
+        default_model: status.default_model
+      });
+    });
+  }, []);
+
+  // Synchronize HTML5 video element with play/pause state
+  useEffect(() => {
+    if (uploadedVideoBlobUrl && videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.play().catch(() => {});
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  }, [isPlaying, uploadedVideoBlobUrl]);
+
+  // Fallback timer simulation when no real HTML5 video blob is loaded
+  useEffect(() => {
+    if (isPlaying && !uploadedVideoBlobUrl) {
       playbackTimerRef.current = setInterval(() => {
         setCurrentTime((prev) => {
           const max = currentAnalysis.durationSeconds;
@@ -82,7 +116,7 @@ export function InteractiveStudio() {
     return () => {
       if (playbackTimerRef.current) clearInterval(playbackTimerRef.current);
     };
-  }, [isPlaying, currentAnalysis.durationSeconds]);
+  }, [isPlaying, uploadedVideoBlobUrl, currentAnalysis.durationSeconds]);
 
   // Keep activeSceneIndex in sync with currentTime
   useEffect(() => {
@@ -105,6 +139,11 @@ export function InteractiveStudio() {
       setCurrentTime(1.5);
       setIsPlaying(false);
       setUploadedFileName(null);
+      setAnalysisError(null);
+      if (uploadedVideoBlobUrl) {
+        URL.revokeObjectURL(uploadedVideoBlobUrl);
+        setUploadedVideoBlobUrl(null);
+      }
     }
   };
 
@@ -113,6 +152,14 @@ export function InteractiveStudio() {
     setUploadedFileName(file.name);
     setIsAnalyzing(true);
     setIsPlaying(false);
+    setAnalysisError(null);
+
+    // Create a local blob URL so the user can see & play their uploaded video
+    if (uploadedVideoBlobUrl) {
+      URL.revokeObjectURL(uploadedVideoBlobUrl);
+    }
+    const blobUrl = URL.createObjectURL(file);
+    setUploadedVideoBlobUrl(blobUrl);
 
     try {
       const result = await reverseEngineerVideo(file, { mode: "all" }, (stage) => {
@@ -121,11 +168,23 @@ export function InteractiveStudio() {
       setCurrentAnalysis(result);
       setCurrentTime(0);
       setActiveSceneIndex(0);
+      if (videoRef.current) {
+        videoRef.current.currentTime = 0;
+      }
     } catch (err) {
-      console.error("Upload error:", err);
+      console.error("Upload/Analysis error:", err);
+      const msg = err instanceof Error ? err.message : String(err);
+      setAnalysisError(msg);
     } finally {
       setIsAnalyzing(false);
       setProcessingStage(null);
+    }
+  };
+
+  const handleScrub = (timeSec: number) => {
+    setCurrentTime(timeSec);
+    if (videoRef.current) {
+      videoRef.current.currentTime = timeSec;
     }
   };
 
@@ -233,19 +292,36 @@ export function InteractiveStudio() {
             </p>
           </div>
 
-          {/* Quick Actions / Demonstration disclaimer badge */}
+          {/* Quick Actions / Backend Status */}
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-900 border border-white/10 text-xs font-mono text-neutral-400">
-              <Info className="w-3.5 h-3.5 text-[#ff7700]" />
-              <span>Simulated Engine (FastAPI Client Ready)</span>
-            </span>
+            {backendStatus ? (
+              <span
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-mono ${
+                  backendStatus.healthy
+                    ? "bg-emerald-950/40 border-emerald-500/30 text-emerald-400"
+                    : "bg-amber-950/40 border-amber-500/30 text-amber-400"
+                }`}
+              >
+                <Server className="w-3.5 h-3.5" />
+                <span>
+                  {backendStatus.healthy
+                    ? `Gemini API Active (${backendStatus.default_model || "gemini-3.5-flash"})`
+                    : "FastAPI Backend Offline"}
+                </span>
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-900 border border-white/10 text-xs font-mono text-neutral-400">
+                <Info className="w-3.5 h-3.5 text-[#ff7700]" />
+                <span>Checking Engine...</span>
+              </span>
+            )}
 
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 border border-white/10 text-xs font-semibold text-white transition-colors cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ff5500] hover:bg-[#ff6600] text-black font-bold text-xs transition-colors cursor-pointer shadow-lg shadow-[#ff5500]/20"
             >
-              <UploadCloud className="w-4 h-4 text-[#ff5500]" />
-              <span>Upload Video</span>
+              <UploadCloud className="w-4 h-4 text-black" />
+              <span>Upload Video to Analyze</span>
             </button>
             <input
               ref={fileInputRef}
@@ -259,6 +335,64 @@ export function InteractiveStudio() {
             />
           </div>
         </div>
+
+        {/* Error Alert Banner */}
+        <AnimatePresence>
+          {analysisError && (
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              className="mb-6 p-4 rounded-xl bg-red-950/70 border border-red-500/40 shadow-xl flex items-center justify-between gap-4"
+            >
+              <div className="flex items-center gap-3">
+                <AlertTriangle className="w-5 h-5 text-red-400 shrink-0" />
+                <div>
+                  <h5 className="text-xs font-bold text-red-200 font-mono uppercase tracking-wider">
+                    Video Analysis Error
+                  </h5>
+                  <p className="text-xs text-red-300 font-mono mt-0.5">
+                    {analysisError}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setAnalysisError(null)}
+                className="text-xs font-mono text-red-400 hover:text-white px-2.5 py-1 rounded bg-red-900/40 hover:bg-red-900/80 transition-colors cursor-pointer shrink-0"
+              >
+                Dismiss
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Active Upload Card if file is loaded */}
+        {uploadedFileName && (
+          <div className="mb-6 p-4 rounded-xl bg-neutral-900/90 border border-[#ff5500]/50 ring-1 ring-[#ff5500]/30 shadow-lg flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-[#ff5500]/10 border border-[#ff5500]/30 flex items-center justify-center text-[#ff5500]">
+                <FileVideo className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-[#ff5500]/20 text-[#ff7700] font-bold">
+                    USER FOOTAGE (REAL GEMINI ANALYSIS)
+                  </span>
+                  <span className="text-xs font-mono text-neutral-400">
+                    {currentAnalysis.durationSeconds}s • {currentAnalysis.resolution}
+                  </span>
+                </div>
+                <h4 className="text-base font-bold text-white mt-0.5">{uploadedFileName}</h4>
+              </div>
+            </div>
+            <button
+              onClick={() => handleSelectPreset(DEMO_PRESETS[0].id)}
+              className="text-xs font-mono text-neutral-400 hover:text-white px-3 py-1.5 rounded-lg bg-neutral-800 border border-white/10 transition-colors cursor-pointer"
+            >
+              Reset to Demo Presets
+            </button>
+          </div>
+        )}
 
         {/* Preset Selector Strip */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-8">
@@ -275,7 +409,7 @@ export function InteractiveStudio() {
                 }`}
               >
                 <div className="flex items-center justify-between text-xs font-mono text-neutral-400 mb-1">
-                  <span>{preset.category}</span>
+                  <span className="text-neutral-500">[DEMO] {preset.category}</span>
                   <span className="text-[#ff7700] font-semibold">{preset.duration}</span>
                 </div>
                 <h4 className="text-base font-bold text-white tracking-tight">{preset.title}</h4>
@@ -389,19 +523,35 @@ export function InteractiveStudio() {
                 /* Interactive Video Canvas View */
                 <div className="relative aspect-[16/9] w-full bg-[#0a0b0e] flex items-center justify-center overflow-hidden">
                   
-                  {/* Dynamic gradient backdrop according to preset */}
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${
-                      selectedPresetId === "preset-cyberpunk-chase"
-                        ? "from-slate-950 via-cyan-950 to-neutral-950"
-                        : selectedPresetId === "preset-noir-dialogue"
-                        ? "from-stone-950 via-neutral-900 to-amber-950"
-                        : "from-indigo-950 via-purple-950 to-neutral-950"
-                    } opacity-90`}
-                  />
+                  {/* Real Uploaded Video Player or Preset Backdrop */}
+                  {uploadedVideoBlobUrl ? (
+                    <video
+                      ref={videoRef}
+                      src={uploadedVideoBlobUrl}
+                      className="absolute inset-0 w-full h-full object-contain bg-black z-0"
+                      playsInline
+                      onTimeUpdate={(e) => {
+                        setCurrentTime(parseFloat(e.currentTarget.currentTime.toFixed(2)));
+                      }}
+                      onEnded={() => setIsPlaying(false)}
+                    />
+                  ) : (
+                    /* Dynamic gradient backdrop according to preset */
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-br ${
+                        selectedPresetId === "preset-cyberpunk-chase"
+                          ? "from-slate-950 via-cyan-950 to-neutral-950"
+                          : selectedPresetId === "preset-noir-dialogue"
+                          ? "from-stone-950 via-neutral-900 to-amber-950"
+                          : "from-indigo-950 via-purple-950 to-neutral-950"
+                      } opacity-90`}
+                    />
+                  )}
 
-                  {/* Simulated Visual Frame Content */}
-                  <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-6 text-center select-none">
+                  {/* Frame HUD Content & Sensor Overlays */}
+                  <div className={`relative z-10 w-full h-full flex flex-col items-center justify-center p-6 text-center select-none pointer-events-none ${
+                    uploadedVideoBlobUrl && isPlaying ? "opacity-0 transition-opacity duration-300" : "opacity-100"
+                  }`}>
                     {/* Grid Crosshair Overlays */}
                     <div className="absolute inset-4 border border-dashed border-white/10 pointer-events-none" />
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 border-t border-b border-[#ff5500]/60 pointer-events-none" />
@@ -433,7 +583,7 @@ export function InteractiveStudio() {
                   </div>
 
                   {/* Top Overlay HUD bar */}
-                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between text-[11px] font-mono text-neutral-300 z-20">
+                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between text-[11px] font-mono text-neutral-300 z-20 pointer-events-none">
                     <span className="px-2 py-0.5 rounded bg-black/60 backdrop-blur-sm border border-white/10 text-white font-semibold">
                       {currentAnalysis.resolution} • {currentAnalysis.fps} FPS
                     </span>
@@ -445,10 +595,14 @@ export function InteractiveStudio() {
                   {/* Floating Play Overlay Button */}
                   <button
                     onClick={() => setIsPlaying(!isPlaying)}
-                    className="absolute inset-0 z-20 flex items-center justify-center bg-black/20 hover:bg-black/40 transition-colors cursor-pointer group"
+                    className={`absolute inset-0 z-20 flex items-center justify-center transition-colors cursor-pointer group ${
+                      uploadedVideoBlobUrl && isPlaying ? "bg-transparent hover:bg-black/20" : "bg-black/20 hover:bg-black/40"
+                    }`}
                     aria-label={isPlaying ? "Pause video" : "Play video"}
                   >
-                    <div className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/30 flex items-center justify-center text-white group-hover:scale-110 transition-transform shadow-xl">
+                    <div className={`w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/30 flex items-center justify-center text-white group-hover:scale-110 transition-transform shadow-xl ${
+                      uploadedVideoBlobUrl && isPlaying ? "opacity-0 group-hover:opacity-100" : "opacity-100"
+                    }`}>
                       {isPlaying ? <Pause className="w-6 h-6 fill-white" /> : <Play className="w-6 h-6 fill-white ml-0.5" />}
                     </div>
                   </button>
@@ -473,7 +627,7 @@ export function InteractiveStudio() {
                           onClick={() => {
                             setActiveSceneIndex(i);
                             const startSec = i * (currentAnalysis.durationSeconds / currentAnalysis.totalScenes);
-                            setCurrentTime(startSec);
+                            handleScrub(startSec);
                           }}
                           className={`p-3 rounded-xl border text-left cursor-pointer transition-all ${
                             isSel
@@ -520,7 +674,7 @@ export function InteractiveStudio() {
                     max={currentAnalysis.durationSeconds}
                     step={0.05}
                     value={currentTime}
-                    onChange={(e) => setCurrentTime(parseFloat(e.target.value))}
+                    onChange={(e) => handleScrub(parseFloat(e.target.value))}
                     className="w-full h-2.5 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-[#ff5500]"
                   />
                 </div>
@@ -534,7 +688,7 @@ export function InteractiveStudio() {
                         key={sc.id}
                         onClick={() => {
                           const startSec = idx * (currentAnalysis.durationSeconds / currentAnalysis.totalScenes);
-                          setCurrentTime(startSec);
+                          handleScrub(startSec);
                         }}
                         className={`text-left p-1.5 rounded text-[10px] font-mono border transition-all cursor-pointer ${
                           isCurrent

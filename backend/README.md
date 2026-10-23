@@ -1,29 +1,27 @@
-# DECONSTRUCT // Python FastAPI Backend Service
+# DECONSTRUCT // Python FastAPI Backend Service (Google Gemini Multimodal)
 
-This directory contains the Python FastAPI backend implementation for the DECONSTRUCT AI Video Reverse-Engineering Platform.
+This directory contains the Python FastAPI backend engine for the DECONSTRUCT (PROMZ) AI Video Reverse-Engineering Platform, powered by the official Google Gen AI SDK (`google-genai`).
 
 ## Features
 
-- **Asynchronous Multipart Video Ingestion**: Accepts `.mp4`, `.mov`, `.webm`, `.mkv` files.
-- **FFmpeg Container Inspection**: Probes resolution, framerate, duration, and aspect ratio.
-- **Pydantic v2 Contract**: Data models exactly mirroring the Next.js TypeScript definitions in `src/types/analysis.ts`.
-- **Dual Output Generation**:
-  - **Mode A (Video to Script)**: Scene-by-scene script cards with camera framing, lens specs, environment, lighting, subjects, dialogue transcription, audio stems, visible text OCR, transition tags.
-  - **Mode B (Recreation Prompt)**: Diffusion model prompt synthesis for Runway Gen-3, OpenAI Sora, Kling 1.5, and Universal Diffusion.
-- **CORS Configured**: Ready to communicate with Next.js running on `http://localhost:3000`.
+- **Real Multimodal Video Analysis**: Uploads video files directly to Google Gen AI Files API and processes footage frame-by-frame using `gemini-3.5-flash` (with automated fallback to `gemini-3.7-flash` and `gemini-flash-latest`).
+- **Container Inspection**: Probes resolution, framerate, duration, aspect ratio, and codec using PyAV (embedded FFmpeg) with `ffprobe` fallback.
+- **Pydantic v2 Contract**: Data models mirroring the Next.js TypeScript definitions in `src/types/analysis.ts`.
+- **Mode A (Video to Script)**: Scene-by-scene script cards with camera framing, motion trajectories, environment, lighting, subjects, dialogue transcription, audio stems, visible text OCR, and cut transitions.
+- **Mode B (Recreation Prompt)**: Parametric prompt synthesis calibrated for Runway Gen-3, OpenAI Sora, Kling 1.5, and Universal Diffusion with negative prompts and temporal consistency guidelines.
+- **Non-blocking Execution**: Long-running multimodal network uploads and analysis run in background threads off the FastAPI async event loop.
+- **Safe Resource Cleanup**: Temporary files and uploaded Gemini remote files are deleted immediately after analysis.
 
-## Quickstart
+## Setup & Execution
 
-### 1. Create Virtual Environment
+### 1. Configure Environment Variables
 
-```bash
-# Windows
-python -m venv venv
-venv\Scripts\activate
+Create or update `backend/.env`:
 
-# macOS / Linux
-python3 -m venv venv
-source venv/bin/activate
+```env
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-3.5-flash
+FALLBACK_MODELS=gemini-3.7-flash,gemini-3-flash-preview,gemini-flash-latest
 ```
 
 ### 2. Install Dependencies
@@ -38,17 +36,13 @@ pip install -r requirements.txt
 uvicorn backend.main:app --reload --port 8000
 ```
 
-FastAPI interactive Swagger documentation will be available at:
-`http://localhost:8000/docs`
-
-Health check endpoint:
-`http://localhost:8000/health`
+- Swagger UI: `http://localhost:8000/docs`
+- Health check: `http://localhost:8000/health`
+- Video analysis: `POST http://localhost:8000/api/v1/analyze`
 
 ### 4. Connect Frontend
 
-In the root of the Next.js project, add to `.env.local`:
+Ensure `.env.local` exists in the repository root:
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
-
-Restart the Next.js dev server. The frontend will now automatically post uploads directly to this FastAPI service!
